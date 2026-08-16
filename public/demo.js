@@ -660,3 +660,10 @@ renderFlights();
 buildTicker();
 document.querySelectorAll('.svc,.trust .t').forEach(el=>el.classList.add('rev'));
 obsRev();
+
+/* ============ mobile nav ============ */
+function toggleMenu(){
+  document.querySelector('header nav').classList.toggle('open');
+}
+document.querySelectorAll('header nav a').forEach(a=>
+  a.addEventListener('click',()=>document.querySelector('header nav').classList.remove('open')));
