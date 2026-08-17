@@ -1,31 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Playfair+Display:ital,wght@1,400;1,500&family=Roboto+Condensed:wght@400;700&family=Rubik:wght@400;500;600;700;800&display=swap");
 
 
   :root{
     --ink:#211d17; --ink2:#332c24; --paper:#faf8f2; --card:#ffffff;
     --gold:#f5c518; --gold2:#a87f00; --aqua:#ffe27a; --line:#e8e4d8; --line2:#d8d2c0;
-    --mut:#6d685c; --mut2:#948f82; --sky:#fbf3d7;
+    --mut:#6d685c; --mut2:#7b7566; --sky:#fbf3d7;
     --green:#2e7d5b; --red:#b3423a; --blue:#22557f;
-    --serif:'Roboto Condensed','Rubik',system-ui,sans-serif;
-    --sans:'Rubik','Manrope','Helvetica Neue',Arial,sans-serif;
+    --serif:var(--f-cond),'Roboto Condensed',system-ui,sans-serif;
+    --sans:var(--f-rubik),'Rubik','Helvetica Neue',Arial,sans-serif;
     --shadow:0 1px 2px rgba(24,22,14,.05),0 8px 28px rgba(24,22,14,.08);
     --shadow-lg:0 24px 64px rgba(24,22,14,.22);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
-  /* film grain over everything — kills the flat digital look */
-  body::after{content:"";position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:.05;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
   /* scroll reveal */
   .rev{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.65,.3,1),transform .8s cubic-bezier(.2,.65,.3,1)}
   .rev.in{opacity:1;transform:none}
   @media(prefers-reduced-motion:reduce){.rev{opacity:1;transform:none;transition:none}}
   @keyframes spin{to{transform:rotate(360deg)}}
-  @keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.09)}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
   @keyframes dash{to{stroke-dashoffset:-400}}
-  ::selection{background:var(--gold);color:#fff}
+  ::selection{background:var(--gold);color:#211d17}
   ::-webkit-scrollbar{width:11px}
   ::-webkit-scrollbar-track{background:var(--paper)}
   ::-webkit-scrollbar-thumb{background:#d8d0b8;border-radius:8px;border:3px solid var(--paper)}
@@ -58,10 +53,6 @@
 
   /* ---------- hero ---------- */
   .hero{position:relative;min-height:620px;display:flex;align-items:center;color:#fff;overflow:hidden;background:linear-gradient(160deg,#f5c518,#eab308)}
-  .hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 65%;animation:kenburns 26s ease-in-out infinite alternate}
-  .stamp{position:absolute;right:7%;bottom:130px;width:132px;height:132px;z-index:3;animation:spin 32s linear infinite;opacity:.9}
-  @media(max-width:900px){.stamp{display:none}}
-  .hero .veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,18,10,.82) 0%,rgba(20,18,10,.45) 55%,rgba(20,18,10,.25) 100%)}
   .hero .inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%;padding:90px 24px 130px}
   .hero .rule{width:56px;height:1px;background:var(--gold);margin-bottom:26px}
   .hero .kicker{color:#f0d060;margin-bottom:18px}
@@ -89,7 +80,6 @@
   .field:last-child{border-right:0}
   .field label{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--mut2)}
   .field select,.field input{border:0;padding:2px 0;font-size:15px;background:transparent;color:var(--ink);font-family:var(--serif)}
-  .field select:focus,.field input:focus{outline:none}
   .search-go{margin-top:18px;border:0;background:var(--ink);color:var(--paper);padding:16px 46px;font-size:12px;font-weight:600;letter-spacing:2.4px;text-transform:uppercase;transition:background .2s}
   .search-go:hover{background:var(--gold2)}
 
@@ -100,21 +90,6 @@
   .trust .t b{display:block;font-family:var(--serif);font-size:42px;font-weight:500;color:var(--ink);line-height:1.1}
   .trust .t b i{font-style:italic;color:var(--gold2);font-size:26px}
   .trust .t small{color:var(--mut);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;font-weight:600}
-
-  /* ---------- editorial statement ---------- */
-  .statement{max-width:880px;margin:96px auto 0;padding:0 24px;text-align:center}
-  .statement .caps{color:var(--gold2);margin-bottom:20px}
-  .statement .caps::before,.statement .caps::after{content:"—";margin:0 14px;color:var(--line2)}
-  .statement p{font-family:var(--serif);font-style:italic;font-size:clamp(23px,3.2vw,36px);line-height:1.4;color:var(--ink);font-weight:400}
-  .statement p b{color:var(--gold2);font-weight:500}
-
-  /* ---------- testimonial ---------- */
-  .quotewrap{max-width:820px;margin:96px auto 0;padding:0 24px;text-align:center;position:relative}
-  .quotewrap .qm{font-family:var(--serif);font-size:170px;line-height:.6;color:rgba(245,197,24,.16);display:block;margin-bottom:6px}
-  .quotewrap p{font-family:var(--serif);font-style:italic;font-size:clamp(19px,2.4vw,26px);line-height:1.55;color:var(--ink)}
-  .quotewrap .who{margin-top:22px;font-size:11px;letter-spacing:2.4px;text-transform:uppercase;font-weight:700;color:var(--mut)}
-  .quotewrap .who b{color:var(--gold2)}
-  .quotewrap .starrow{color:var(--gold);letter-spacing:6px;margin-top:10px;font-size:13px}
 
   /* ---------- featured tour card ---------- */
   .card.feat{grid-column:span 2;flex-direction:row}
@@ -218,7 +193,6 @@
   .frow .ff:last-child{border-right:0}
   .frow label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.45);margin-bottom:4px}
   .frow select,.frow input{border:0;background:transparent;color:#fff;font-family:var(--serif);font-size:15px;width:100%}
-  .frow select:focus,.frow input:focus{outline:none}
   .frow select option{color:var(--ink)}
   .frow input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.6}
   .frow .ff.dis{opacity:.35;pointer-events:none}
@@ -331,7 +305,6 @@
   .book-row .bf{border:1px solid var(--line2);padding:12px 16px}
   .book-row label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mut2);font-weight:600;margin-bottom:3px}
   .book-row input{border:0;width:100%;font-size:15px;font-family:var(--serif);background:transparent}
-  .book-row input:focus{outline:none}
   .qty{display:flex;align-items:center;gap:16px}
   .qty button{width:30px;height:30px;border:1px solid var(--line2);background:transparent;font-size:15px;color:var(--ink)}
   .qty button:hover{border-color:var(--gold)}
@@ -370,7 +343,6 @@
   .form-grid .bf.full{grid-column:1/-1}
   .form-grid label{display:block;font-size:9.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--mut2);font-weight:700;margin-bottom:2px}
   .form-grid input{border:0;width:100%;font-size:14.5px;background:transparent;font-family:var(--serif)}
-  .form-grid input:focus{outline:none}
   .payopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .pay{border:1px solid var(--line2);padding:16px 12px;text-align:center;cursor:pointer;background:var(--card)}
   .pay.on{border-color:var(--gold);background:#fdf8e8;box-shadow:inset 0 0 0 1px var(--gold)}
@@ -410,26 +382,18 @@
   }
 
   /* ============ SKY APP THEME ============ */
-  body::after{display:none}
   .gnum,.stampl{display:none}
   .logo{font-size:20px;font-family:var(--serif);font-weight:600}
   .logo i{font-style:normal;color:var(--gold2)}
   .flogo{font-size:22px}
   /* light day hero */
   .hero{background:linear-gradient(180deg,#d8eefb 0%,#eef7fd 62%,#f8fbfd 100%);color:var(--ink);min-height:560px}
-  .hero img.bg,.hero .veil{display:none}
   .hero .kicker{color:var(--gold2);background:rgba(245,197,24,.1);padding:9px 20px;border-radius:999px;display:inline-block}
   .hero h1{color:var(--ink);font-size:clamp(32px,4.4vw,52px)}
   .hero h1 i{color:var(--gold)}
   .hero p{color:var(--mut)}
   .fpath .arc{stroke:rgba(245,197,24,.4)}
   .fpath .dot{fill:#211d17}
-  .sun{position:absolute;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 38% 35%,#fff3c9,#ffd97a);box-shadow:0 0 90px 34px rgba(255,214,110,.45);top:84px;right:13%;z-index:1}
-  .cl{position:absolute;width:150px;height:42px;background:#fff;border-radius:999px;opacity:.9;box-shadow:34px -18px 0 4px #fff,-30px -12px 0 0 #fff;z-index:1;animation:drift 44s linear infinite}
-  .c1{top:130px;left:-200px}
-  .c2{top:250px;left:-260px;animation-duration:58s;animation-delay:8s;transform:scale(.65)}
-  .c3{top:56px;left:-160px;animation-duration:72s;animation-delay:18s;transform:scale(1.15)}
-  @keyframes drift{to{left:112%}}
   /* rounded everything */
   .search-card{border-radius:28px;overflow:hidden;border:0;box-shadow:0 30px 80px rgba(19,50,75,.16)}
   .tabs{padding:12px;border-bottom:0;gap:8px}
@@ -513,13 +477,6 @@
   .success h3{font-size:19px}
   .success .code{font-size:14px}
   .trust .t small{font-size:11px}
-  /* chat testimonial */
-  .chatwrap{max-width:540px;margin:90px auto 0;padding:0 24px;display:flex;flex-direction:column}
-  .chead{text-align:center;color:var(--gold2);margin-bottom:22px}
-  .bub{max-width:80%;padding:13px 18px;border-radius:20px;margin-bottom:10px;font-size:14px;line-height:1.5;box-shadow:0 4px 14px rgba(19,50,75,.07)}
-  .bub.ag{background:linear-gradient(135deg,#332c24,#211d17);color:#fff;border-bottom-left-radius:6px;align-self:flex-start}
-  .bub.us{background:#fff;border:1px solid var(--line);border-bottom-right-radius:6px;align-self:flex-end}
-  .cnote{text-align:center;font-size:11.5px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--mut2);margin-top:14px}
   /* services + modals + misc */
   .svc-grid{gap:14px;border:0;background:transparent}
   .svc{outline:0;border:1px solid var(--line);border-radius:22px}
@@ -534,11 +491,9 @@
   footer{border-radius:38px 38px 0 0}
   .chips .chip{border-radius:999px}
   .empty{border-radius:18px}
-  @media(max-width:900px){.sun{right:4%}}
 
   /* ============ FLYMN PREMIUM THEME ============ */
   h1,h2{text-transform:uppercase}
-  .sun,.cl{display:none}
   .demo-note{background:#1b1712;color:var(--gold)}
   /* dark premium hero, yellow as accent */
   .hero{background:linear-gradient(150deg,#272119 0%,#151210 100%);color:#fff;min-height:560px}
@@ -619,7 +574,7 @@
   footer{border-radius:0}
   /* luxury editorial accent */
   .lux{max-width:820px;margin:90px auto 0;padding:0 24px;text-align:center}
-  .lux p{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(22px,3vw,32px);line-height:1.4;color:var(--ink);margin-bottom:14px}
+  .lux p{font-family:var(--f-play),'Playfair Display',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(22px,3vw,32px);line-height:1.4;color:var(--ink);margin-bottom:14px}
   .lux small{color:var(--mut2);display:block}
   /* authentic brand header */
   .topbar{background:var(--gold);color:#211d17;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:7px 22px;font-size:11.5px;font-weight:600;letter-spacing:.6px;flex-wrap:wrap}
@@ -631,7 +586,7 @@
   .pmark{width:30px;height:22px;fill:var(--gold);flex-shrink:0}
   .pmark.pm2{width:26px;height:19px;margin-right:8px;vertical-align:-2px;display:inline-block}
   .lk{display:flex;flex-direction:column;line-height:1}
-  .lk1{font-family:'Archivo Black','Arial Black',Arial,sans-serif;font-size:21px;letter-spacing:.5px}
+  .lk1{font-family:var(--f-arch),'Archivo Black',Arial,sans-serif;font-size:21px;letter-spacing:.5px}
   .lk1 b{color:#fff;font-weight:400}
   .lk1 i{color:var(--gold);font-style:normal;background:none;padding:0;margin:0}
   .lk small{font-size:7.5px;letter-spacing:3.4px;color:#8a867b;font-weight:700;margin-top:3px}
@@ -641,7 +596,7 @@
   .lang-toggle button.on{background:var(--gold);color:#211d17}
   .cart-btn{border:1px solid rgba(255,255,255,.35);color:#fff;background:transparent}
   .cart-btn:hover{background:var(--gold);color:#211d17;border-color:var(--gold)}
-  .flogo{font-family:'Archivo Black','Arial Black',Arial,sans-serif;font-weight:400;display:flex;align-items:center}
+  .flogo{font-family:var(--f-arch),'Archivo Black',Arial,sans-serif;font-weight:400;display:flex;align-items:center}
   .flogo i{background:none;color:var(--gold);padding:0;margin:0}
   /* partner airline marquee */
   .pwrap{margin:90px 0 0}
@@ -707,7 +662,7 @@
     section{padding:56px 16px 0}
     .sec-head h2{font-size:22px}
     .flights-band{padding-top:56px}
-    .statement,.quotewrap,.routes,.lux,.chatwrap{margin-top:60px}
+    .routes,.lux{margin-top:60px}
     .pwrap{margin:60px 0 0}
     .trust{padding:32px 16px 0;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .trust .t b{font-size:26px}
@@ -722,4 +677,25 @@
 
     .fwrap{grid-template-columns:1fr;gap:28px;padding:44px 20px 30px}
     footer .wm{display:none}
+  }
+
+  /* ============ ACCESSIBILITY & TOUCH ============ */
+  :root{accent-color:var(--gold2)}
+  /* visible keyboard focus; field boxes light up instead of inner outlines */
+  :where(button,a,[tabindex]):focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+  .field select:focus,.field input:focus,.frow select:focus,.frow input:focus,
+  .book-row input:focus,.form-grid input:focus{outline:none}
+  .field:focus-within,.frow .ff:focus-within,.book-row .bf:focus-within,
+  .form-grid .bf:focus-within{border-color:var(--gold2);box-shadow:inset 0 0 0 1px var(--gold2)}
+  /* controls promoted from div/span to button: neutral base, class styles win */
+  :where(button.pc,button.exrow,button.pay,button.seat){background:none;border:0;font:inherit;color:inherit;padding:0}
+  .exrow{width:100%}
+  @media(pointer:coarse){
+    .seat{width:40px;height:40px;font-size:11px}
+    .aisle{width:12px}
+    .lang-toggle button{padding:9px 11px}
+    .menu-btn{width:40px;height:40px}
+    .sorts button{padding:11px 0}
+    .trip-toggle button{padding:10px 20px}
+    .ci .rm{width:36px;height:36px}
   }

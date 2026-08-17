@@ -124,8 +124,11 @@ let LANG='mn';
 const t=k=>I18N[LANG][k]||k;
 function setLang(l){
   LANG=l;
+  document.documentElement.lang=l;
   document.getElementById('btn-mn').classList.toggle('on',l==='mn');
   document.getElementById('btn-en').classList.toggle('on',l==='en');
+  document.getElementById('btn-mn').setAttribute('aria-pressed',l==='mn');
+  document.getElementById('btn-en').setAttribute('aria-pressed',l==='en');
   document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});
   document.querySelectorAll('[data-i18n-html]').forEach(el=>{el.innerHTML=t(el.dataset.i18nHtml)});
   renderTours();renderFlights();renderCart();
@@ -231,9 +234,9 @@ function filterTours(f,btn){
   if(btn)btn.classList.add('on');
   renderTours();
 }
-function visualHtml(id,h){
+function visualHtml(id,h,alt){
   return `<div class="visual" style="height:${h}px;background:${sceneBg(id)}">
-    <img src="${IMG[id]}" alt="" loading="lazy" onerror="this.remove()">`;
+    <img src="${IMG[id]}" alt="${alt||''}" loading="lazy" onerror="this.remove()">`;
 }
 function renderTours(){
   const g=document.getElementById('tourGrid');
@@ -242,7 +245,7 @@ function renderTours(){
     const L=x[LANG];
     const feat=(i===0&&tourFilter==='all')?' feat':'';
     return `<div class="card rev${feat}" onclick="openTour('${x.id}')">
-      ${visualHtml(x.id,230)}
+      ${visualHtml(x.id,230,L.name)}
         <span class="tag">${x.cat==='intl'?t('f_intl'):t('f_dom')}</span>
         ${x.hot?`<span class="hot">${t('hot')}</span>`:''}
         <span class="stampl">SKYTICKET<b>✈</b>EST 2021</span>
@@ -266,9 +269,10 @@ function renderTours(){
 let curTour=null,curPax=2;
 function openTour(id){
   curTour=TOURS.find(x=>x.id===id);curPax=2;
-  document.getElementById('tmVisual').outerHTML=`<div class="mvisual" id="tmVisual" style="background:${sceneBg(id)}"><img src="${IMG[id]}" alt="" onerror="this.remove()"></div>`;
+  document.getElementById('tmVisual').outerHTML=`<div class="mvisual" id="tmVisual" style="background:${sceneBg(id)}"><img src="${IMG[id]}" alt="${curTour[LANG].name}" onerror="this.remove()"></div>`;
   drawTourModal();
   document.getElementById('tourOverlay').classList.add('on');
+  trapOpen(document.getElementById('tourOverlay'));
 }
 function drawTourModal(){
   const x=curTour,L=x[LANG];
@@ -294,7 +298,7 @@ function chPax(d){
   document.getElementById('paxN').textContent=curPax;
   document.getElementById('tourTotal').textContent=fmt(curTour.price*curPax);
 }
-function closeTour(){document.getElementById('tourOverlay').classList.remove('on')}
+function closeTour(){document.getElementById('tourOverlay').classList.remove('on');trapClose()}
 function addTour(){
   const date=document.getElementById('tourDate').value;
   CART.push({type:'tour',ref:curTour.id,pax:curPax,date,price:curTour.price*curPax});
@@ -337,8 +341,8 @@ function renderFlights(){
     const d=dShift(FL.date,n);
     const dt=new Date(d+'T00:00:00');
     const best=Math.min(...route.map(f=>FL.trip==='rt'?Math.round(priceFor(f,FL.cls,d)*RTF/1000)*1000:priceFor(f,FL.cls,d)));
-    return `<div class="pc ${n===0?'on':''}" onclick="setPDate('${d}')">
-      <small>${WD[LANG][dt.getDay()]} · ${dt.getMonth()+1}/${dt.getDate()}</small><b>${fmt(best)}</b></div>`;
+    return `<button type="button" class="pc ${n===0?'on':''}" onclick="setPDate('${d}')">
+      <small>${WD[LANG][dt.getDay()]} · ${dt.getMonth()+1}/${dt.getDate()}</small><b>${fmt(best)}</b></button>`;
   }).join('');
   // sort tabs
   document.getElementById('sorts').innerHTML=[['price','sort_price'],['dur','sort_dur'],['dep','sort_dep']]
@@ -396,8 +400,9 @@ function openFl(id,cls){
        psg:Array.from({length:FL.pax},()=>({ln:'',fn:'',pp:'',dob:''}))};
   drawFlHead();drawFlBody();
   document.getElementById('flOverlay').classList.add('on');
+  trapOpen(document.getElementById('flOverlay'));
 }
-function closeFl(){document.getElementById('flOverlay').classList.remove('on')}
+function closeFl(){document.getElementById('flOverlay').classList.remove('on');trapClose()}
 function flFarePP(){
   const p=priceFor(FLB.f,FLB.cls,FL.date);
   return FL.trip==='rt'?Math.round(p*RTF/1000)*1000:p;
@@ -459,14 +464,14 @@ function drawFlBody(){
   }
   else{
     b.innerHTML=flSteps()+`
-      <div class="exrow ${FLB.extras.bag?'on':''}" onclick="FLB.extras.bag=!FLB.extras.bag;drawFlBody()">
+      <button type="button" class="exrow ${FLB.extras.bag?'on':''}" aria-pressed="${FLB.extras.bag}" onclick="FLB.extras.bag=!FLB.extras.bag;drawFlBody()">
         <div class="xi"><b>${t('extra_bag')}</b><small>${t('extra_bag_s')}</small></div>
         <div class="xp">+ ${fmt(80000*FL.pax)}</div>
-      </div>
-      <div class="exrow ${FLB.extras.ins?'on':''}" onclick="FLB.extras.ins=!FLB.extras.ins;drawFlBody()">
+      </button>
+      <button type="button" class="exrow ${FLB.extras.ins?'on':''}" aria-pressed="${FLB.extras.ins}" onclick="FLB.extras.ins=!FLB.extras.ins;drawFlBody()">
         <div class="xi"><b>${t('ins')}</b><small>${t('ins_s')}</small></div>
         <div class="xp">+ ${fmt(45000*FL.pax)}</div>
-      </div>
+      </button>
       <div class="total-row"><span>${t('total')}</span><b>${fmt(flTotal())}</b></div>
       <div class="mfoot">
         <button class="btn btn-line" onclick="FLB.step='seats';drawFlBody()">${t('back')}</button>
@@ -484,7 +489,7 @@ function seatMapHtml(){
       const s=r+c;
       const tk=hashN(FLB.f.id+s)%5===0;
       const sel=FLB.seats.includes(s);
-      return `<span class="seat ${tk?'tk':''} ${sel?'sel':''}" onclick="${tk?'':`togSeat('${s}')`}">${c}</span>`;
+      return `<button type="button" class="seat ${tk?'tk':''} ${sel?'sel':''}" ${tk?'disabled':''} aria-pressed="${sel}" aria-label="${s}" onclick="${tk?'':`togSeat('${s}')`}">${c}</button>`;
     }).join('')+`<span class="rn">${r}</span></div>`).join('')+`</div>`;
 }
 function togSeat(s){
@@ -518,8 +523,8 @@ function syncBadge(){
   const b=document.getElementById('cartBadge');
   b.style.display=CART.length?'flex':'none';b.textContent=CART.length;
 }
-function openCart(){step=1;renderCart();document.getElementById('drawer').classList.add('on')}
-function closeCart(){document.getElementById('drawer').classList.remove('on')}
+function openCart(){step=1;renderCart();const d=document.getElementById('drawer');d.classList.add('on');trapOpen(d)}
+function closeCart(){document.getElementById('drawer').classList.remove('on');trapClose()}
 function rm(i){CART.splice(i,1);syncBadge();toast(t('removed'));renderCart()}
 function cartSum(){return CART.reduce((s,c)=>s+c.price,0)}
 function itemLabel(c){
@@ -569,8 +574,8 @@ function renderCart(){
       <div class="lblrow">${t('pay_choose')}</div>
       <div class="payopts">
         ${[['qpay','QPay',t('pm_qpay')],['socialpay','SocialPay',t('pm_social')],['card','Visa / Mastercard',t('pm_card')],['invoice','Invoice',t('pm_inv')]].map(p=>`
-          <div class="pay ${payMethod===p[0]?'on':''}" onclick="payMethod='${p[0]}';renderCart()">
-            <b>${p[1]}</b><small>${p[2]}</small></div>`).join('')}
+          <button type="button" class="pay ${payMethod===p[0]?'on':''}" aria-pressed="${payMethod===p[0]}" onclick="payMethod='${p[0]}';renderCart()">
+            <b>${p[1]}</b><small>${p[2]}</small></button>`).join('')}
       </div>
       ${payMethod==='qpay'||payMethod==='socialpay'?`<div style="text-align:center"><div class="qr"></div><small style="color:var(--mut);font-size:12px">${t('qpay_scan')}</small></div>`:''}
       ${payMethod==='card'?`<div class="form-grid" style="margin-top:6px">
@@ -623,6 +628,7 @@ function toast(msg){
 /* ============ scroll reveal & ticker ============ */
 function countUp(el){
   const target=+el.dataset.n, suf=el.dataset.suf||'';
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=target.toLocaleString()+suf;return}
   const t0=performance.now(), dur=1400;
   function tick(now){
     const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
@@ -663,7 +669,53 @@ obsRev();
 
 /* ============ mobile nav ============ */
 function toggleMenu(){
-  document.querySelector('header nav').classList.toggle('open');
+  const nav=document.querySelector('header nav');
+  const open=nav.classList.toggle('open');
+  document.querySelector('.menu-btn').setAttribute('aria-expanded',open);
 }
 document.querySelectorAll('header nav a').forEach(a=>
-  a.addEventListener('click',()=>document.querySelector('header nav').classList.remove('open')));
+  a.addEventListener('click',()=>{
+    document.querySelector('header nav').classList.remove('open');
+    document.querySelector('.menu-btn').setAttribute('aria-expanded','false');
+  }));
+document.addEventListener('click',e=>{
+  const nav=document.querySelector('header nav');
+  if(nav.classList.contains('open')&&!e.target.closest('header')){
+    nav.classList.remove('open');
+    document.querySelector('.menu-btn').setAttribute('aria-expanded','false');
+  }
+});
+
+/* ============ dialog focus management ============ */
+let lastFocus=null;
+function trapOpen(box){
+  lastFocus=document.activeElement;
+  document.body.style.overflow='hidden';
+  const x=box.querySelector('.x');
+  if(x)x.focus();
+}
+function trapClose(){
+  document.body.style.overflow='';
+  if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  lastFocus=null;
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('drawer').classList.contains('on'))return closeCart();
+    if(document.getElementById('flOverlay').classList.contains('on'))return closeFl();
+    if(document.getElementById('tourOverlay').classList.contains('on'))return closeTour();
+    if(document.querySelector('header nav.open'))toggleMenu();
+    return;
+  }
+  if(e.key==='Tab'){
+    const box=document.querySelector('.overlay.on .modal')||
+      (document.getElementById('drawer').classList.contains('on')?document.getElementById('drawer'):null);
+    if(!box)return;
+    const f=[...box.querySelectorAll('button,input,select,a[href],[tabindex]')]
+      .filter(el=>!el.disabled&&el.offsetParent!==null);
+    if(!f.length)return;
+    const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){last.focus();e.preventDefault()}
+    else if(!e.shiftKey&&document.activeElement===last){first.focus();e.preventDefault()}
+  }
+});
